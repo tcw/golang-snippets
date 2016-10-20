@@ -4,13 +4,17 @@ import (
 	"fmt"
 	"os/exec"
 	"log"
-	"os"
+	"strings"
 )
 
 func main() {
-	command := os.Args[1]
-	lookForCommand(command)
-	runCommand("ls","-h","-l")
+	lookForCommand("unzip")
+	output := runCommandString("mkdir target")
+	fmt.Println(output)
+	output = runCommandString("unzip -d ./target text.zip")
+	fmt.Println(output)
+	output = runCommandString("cp text.zip target/")
+	fmt.Println(output)
 }
 
 func lookForCommand(command string) {
@@ -21,10 +25,15 @@ func lookForCommand(command string) {
 	fmt.Printf("Found command [%s] at %s\n", command, path)
 }
 
-func runCommand(command string,commandArgs ...string){
-	out, err := exec.Command(command,commandArgs...).Output()
+func runCommandString(commandString string) string {
+	cmdAndArgs := strings.Split(commandString, " ")
+	return runCommand(cmdAndArgs[0], cmdAndArgs[1:])
+}
+
+func runCommand(command string, commandArgs []string) string {
+	out, err := exec.Command(command, commandArgs...).Output()
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Print(string(out))
+	return string(out)
 }

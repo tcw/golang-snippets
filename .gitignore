@@ -25,4 +25,6 @@ _testmain.go
 *.test
 *.prof
 
-.idea
+.idea/
+target/
+golang-snippets
